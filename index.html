@@ -34,19 +34,21 @@
         .order-summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed #cbd5e1; }
         .order-summary-header svg { width: 18px; height: 18px; fill: #ff3d8b; flex-shrink: 0; }
         .order-summary-header h2 { font-size: 0.85rem; font-weight: 700; color: #1a1a2e; text-transform: uppercase; letter-spacing: 0.5px; }
-        .order-passenger { background: #fff0f6; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; border: 1px dashed #ffd0e0; }
-        .order-passenger-label { font-size: 0.7rem; font-weight: 700; color: #ff3d8b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-        .order-passenger-name { font-size: 0.9rem; font-weight: 700; color: #1a1a2e; margin-bottom: 2px; }
-        .order-passenger-cpf { font-size: 0.8rem; color: #6b7280; font-weight: 500; font-family: 'Courier New', monospace; }
         .order-company { font-size: 0.82rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .order-company::before { content: '🚌'; font-size: 0.9rem; }
         .order-route { font-size: 0.85rem; color: #374151; line-height: 1.5; margin-bottom: 6px; }
         .order-route .arrow { color: #ff3d8b; font-weight: 700; margin: 0 4px; }
-        .order-date { font-size: 0.82rem; color: #6b7280; font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+        .order-date { font-size: 0.82rem; color: #6b7280; font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
         .order-date::before { content: '📅'; font-size: 0.85rem; }
-        .order-total { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
+        .order-cpf { font-size: 0.82rem; color: #6b7280; font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+        .order-cpf::before { content: '🪪'; font-size: 0.85rem; }
+        .order-total { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
+        .order-total-row { display: flex; align-items: center; justify-content: space-between; }
         .order-total-label { font-size: 0.85rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
         .order-total-value { font-size: 1.4rem; font-weight: 800; color: #ff3d8b; letter-spacing: -0.5px; }
+        .order-metade-row { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
+        .order-metade-label { font-size: 0.8rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .order-metade-value { font-size: 1.15rem; font-weight: 800; color: #10b981; letter-spacing: -0.3px; }
         .qrcode-wrapper { display: flex; justify-content: center; margin-bottom: 20px; }
         #qrcode { width: 190px; height: 190px; background: #ffffff; padding: 12px; border-radius: 20px; box-shadow: 0 8px 24px rgba(255, 61, 139, 0.15); border: 2px solid #ffe0ec; display: flex; align-items: center; justify-content: center; }
         #qrcode img { width: 100%; height: 100%; object-fit: contain; }
@@ -79,13 +81,13 @@
             .cookie-banner { flex-direction: column; text-align: center; padding: 18px 16px; }
             .btn-cookie { width: 100%; }
             .order-total-value { font-size: 1.25rem; }
+            .order-metade-value { font-size: 1.05rem; }
         }
     </style>
 </head>
 <body>
 
     <main class="pix-container">
-
         <div class="bus-illustration">
             <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
                 <g>
@@ -120,37 +122,33 @@
         <p class="pix-subtitle">Sua próxima viagem está a um PIX de distância. Confirme o pagamento antes do tempo acabar.</p>
 
         <div class="timer-box">
-            <svg class="timer-icon" viewBox="0 0 24 24">
-                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-            </svg>
+            <svg class="timer-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
             <span class="timer-text">Reserve garantida por <strong>5 minutos</strong>:</span>
             <span class="timer-countdown" id="timerDisplay">05:00</span>
         </div>
 
         <div class="order-summary">
             <div class="order-summary-header">
-                <svg viewBox="0 0 24 24">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                 <h2>Seu pedido</h2>
             </div>
-
-            <div class="order-passenger">
-                <div class="order-passenger-label">Passageiro</div>
-                <div class="order-passenger-name" id="orderNome">João da Silva</div>
-                <div class="order-passenger-cpf" id="orderCpf">CPF: 123.456.789-00</div>
-            </div>
-
-            <div class="order-company" id="orderCompany">Gontijo</div>
-            <div class="order-route" id="orderRoute">
-                <span id="orderOrigem">Londrina - Rodoviária</span>
+            <div class="order-company" id="orderCompany">Carregando...</div>
+            <div class="order-route">
+                <span id="orderOrigem">—</span>
                 <span class="arrow">→</span>
-                <span id="orderDestino">Belo Horizonte - Rodoviária</span>
+                <span id="orderDestino">—</span>
             </div>
-            <div class="order-date" id="orderDate">Qua. 28 out.</div>
+            <div class="order-date" id="orderDate">—</div>
+            <div class="order-cpf" id="orderCpf">CPF: —</div>
             <div class="order-total">
-                <span class="order-total-label">Total</span>
-                <span class="order-total-value" id="orderTotal">R$ 189,00</span>
+                <div class="order-total-row">
+                    <span class="order-total-label">Total</span>
+                    <span class="order-total-value" id="orderTotal">R$ —</span>
+                </div>
+                <div class="order-metade-row">
+                    <span class="order-metade-label">Por pessoa (metade)</span>
+                    <span class="order-metade-value" id="orderMetade">R$ —</span>
+                </div>
             </div>
         </div>
 
@@ -159,11 +157,9 @@
         </div>
 
         <div class="pix-key-box">
-            <span class="pix-key-text" id="pixKeyText">00020126580014br.gov.bcb.pix0136exemplo-chave-pix-123456</span>
+            <span class="pix-key-text" id="pixKeyText">Carregando chave PIX...</span>
             <button class="btn-copy" id="copyButton">
-                <svg viewBox="0 0 24 24" width="16" height="16">
-                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                 Copiar
             </button>
         </div>
@@ -183,84 +179,86 @@
         <button class="btn-cookie" id="cookieAccept">Entendi</button>
     </div>
 
-    <script>
-        // ========== CONFIG PADRÃO (fallback) ==========
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjlEzQVLQuXQwmqR6bP9Xj8nx0c122njw",
+            authDomain: "tela-copiar-chave.firebaseapp.com",
+            databaseURL: "https://tela-copiar-chave-default-rtdb.firebaseio.com",
+            projectId: "tela-copiar-chave",
+            storageBucket: "tela-copiar-chave.firebasestorage.app",
+            messagingSenderId: "1002556410924",
+            appId: "1:1002556410924:web:39c833bb3abf14c5259589"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
         const DEFAULT_CONFIG = {
-            nome: 'João da Silva',
-            cpf: '123.456.789-00',
             empresa: 'Gontijo',
             origem: 'Londrina - Rodoviária',
             destino: 'Belo Horizonte - Rodoviária',
+            cpf: '000.000.000-00',
             data: 'Qua. 28 out.',
             total: '189,00',
+            metade: '94,50',
             pixKey: '00020126580014br.gov.bcb.pix0136exemplo-chave-pix-123456',
             qrImage: null
         };
 
-        // ========== CARREGAR CONFIG SALVA PELO ADMIN ==========
-        function loadConfig() {
-            try {
-                // Tenta localStorage primeiro, depois sessionStorage
-                const raw = localStorage.getItem('buser_pix_config')
-                         || sessionStorage.getItem('buser_pix_config');
-                if (!raw) return { ...DEFAULT_CONFIG };
-                return { ...DEFAULT_CONFIG, ...JSON.parse(raw) };
-            } catch (e) {
-                console.warn('Erro ao ler config:', e);
-                return { ...DEFAULT_CONFIG };
+        const qrContainer = document.getElementById('qrcode');
+        const copyButton = document.getElementById('copyButton');
+        const copyFeedback = document.getElementById('copyFeedback');
+        let currentPixKey = DEFAULT_CONFIG.pixKey;
+
+        function calcularMetade(totalStr) {
+            const valor = parseFloat(String(totalStr).replace(/\./g, '').replace(',', '.')) || 0;
+            return (valor / 2).toFixed(2).replace('.', ',');
+        }
+
+        function aplicarConfig(config) {
+            document.getElementById('orderCompany').textContent = config.empresa;
+            document.getElementById('orderOrigem').textContent = config.origem;
+            document.getElementById('orderDestino').textContent = config.destino;
+            document.getElementById('orderDate').textContent = config.data;
+            document.getElementById('orderCpf').textContent = 'CPF: ' + (config.cpf || '—');
+            document.getElementById('orderTotal').textContent = 'R$ ' + config.total;
+            document.getElementById('orderMetade').textContent = 'R$ ' + (config.metade || calcularMetade(config.total));
+            document.getElementById('pixKeyText').textContent = config.pixKey;
+            currentPixKey = config.pixKey;
+
+            qrContainer.innerHTML = '';
+            if (config.qrImage) {
+                const img = document.createElement('img');
+                img.src = config.qrImage;
+                img.alt = 'QR Code PIX';
+                qrContainer.appendChild(img);
+            } else {
+                new QRCode(qrContainer, {
+                    text: config.pixKey, width: 190, height: 190,
+                    colorDark: "#1a1a2e", colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
             }
         }
 
-        const config = loadConfig();
-        console.log('Config carregada na tela do cliente:', config);
-
-        // ========== PREENCHER RESUMO DO PEDIDO ==========
-        document.getElementById('orderNome').textContent = config.nome;
-        document.getElementById('orderCpf').textContent = 'CPF: ' + config.cpf;
-        document.getElementById('orderCompany').textContent = config.empresa;
-        document.getElementById('orderOrigem').textContent = config.origem;
-        document.getElementById('orderDestino').textContent = config.destino;
-        document.getElementById('orderDate').textContent = config.data;
-        document.getElementById('orderTotal').textContent = 'R$ ' + config.total;
-        document.getElementById('pixKeyText').textContent = config.pixKey;
-
-        // ========== GERAR QR CODE ==========
-        const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = '';
-
-        if (config.qrImage) {
-            // Imagem personalizada do admin
-            const img = document.createElement('img');
-            img.src = config.qrImage;
-            img.alt = 'QR Code PIX';
-            qrContainer.appendChild(img);
-        } else {
-            // Gerar QR a partir da chave
-            new QRCode(qrContainer, {
-                text: config.pixKey,
-                width: 190,
-                height: 190,
-                colorDark: "#1a1a2e",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-
-        // ========== BOTÃO COPIAR ==========
-        const copyButton = document.getElementById('copyButton');
-        const copyFeedback = document.getElementById('copyFeedback');
+        onValue(ref(db, 'buser_pix_config'), (snapshot) => {
+            const saved = snapshot.val();
+            aplicarConfig(saved ? { ...DEFAULT_CONFIG, ...saved } : { ...DEFAULT_CONFIG });
+        }, (error) => {
+            console.error('Erro ao ler do Firebase:', error);
+            aplicarConfig(DEFAULT_CONFIG);
+        });
 
         copyButton.addEventListener('click', async () => {
             try {
-                await navigator.clipboard.writeText(config.pixKey);
+                await navigator.clipboard.writeText(currentPixKey);
                 copyFeedback.textContent = 'Chave copiada!';
                 copyFeedback.classList.remove('hidden');
                 const originalHTML = copyButton.innerHTML;
-                copyButton.innerHTML = `
-                    <svg viewBox="0 0 24 24" width="16" height="16">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-                    </svg> Copiado!
-                `;
+                copyButton.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Copiado!`;
                 copyButton.style.background = '#10b981';
                 setTimeout(() => {
                     copyFeedback.classList.add('hidden');
@@ -268,9 +266,8 @@
                     copyButton.style.background = '';
                 }, 2000);
             } catch (err) {
-                // Fallback para navegadores antigos
                 const textarea = document.createElement('textarea');
-                textarea.value = config.pixKey;
+                textarea.value = currentPixKey;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
@@ -281,7 +278,6 @@
             }
         });
 
-        // ========== TIMER 5 MINUTOS ==========
         const timerDisplay = document.getElementById('timerDisplay');
         let timeLeft = 5 * 60;
         let timerInterval = null;
@@ -289,15 +285,9 @@
         function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
-            timerDisplay.textContent =
-                String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-
-            if (timeLeft <= 60 && timeLeft > 0) {
-                timerDisplay.classList.add('warning');
-            } else {
-                timerDisplay.classList.remove('warning');
-            }
-
+            timerDisplay.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+            if (timeLeft <= 60 && timeLeft > 0) timerDisplay.classList.add('warning');
+            else timerDisplay.classList.remove('warning');
             if (timeLeft <= 0) {
                 timerDisplay.classList.remove('warning');
                 timerDisplay.classList.add('expired');
@@ -308,18 +298,11 @@
                 copyButton.style.cursor = 'not-allowed';
             }
         }
-
         updateTimerDisplay();
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            updateTimerDisplay();
-        }, 1000);
+        timerInterval = setInterval(() => { timeLeft--; updateTimerDisplay(); }, 1000);
 
-        // ========== BANNER DE COOKIES ==========
         const cookieBanner = document.getElementById('cookieBanner');
-        document.getElementById('cookieAccept').addEventListener('click', () => {
-            cookieBanner.classList.add('hide');
-        });
+        document.getElementById('cookieAccept').addEventListener('click', () => cookieBanner.classList.add('hide'));
     </script>
 </body>
 </html>
