@@ -10,13 +10,34 @@
         body { min-height: 100vh; background: linear-gradient(135deg, #fff5f7 0%, #f0f9ff 100%); padding: 30px 20px; display: flex; flex-direction: column; align-items: center; }
         .admin-container { background: #ffffff; border-radius: 28px; box-shadow: 0 20px 50px rgba(255, 0, 128, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04); max-width: 900px; width: 100%; padding: 32px 28px; position: relative; overflow: hidden; }
         .admin-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #ff3d8b, #ff6fa5, #ff3d8b); }
-        .admin-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px dashed #ffe0ec; }
+        .admin-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px dashed #ffe0ec; flex-wrap: wrap; }
         .admin-header-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #ff3d8b, #ff6fa5); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 6px 16px rgba(255, 61, 139, 0.3); }
         .admin-header-icon svg { width: 26px; height: 26px; fill: white; }
         .admin-header h1 { font-size: 1.5rem; font-weight: 800; color: #1a1a2e; letter-spacing: -0.5px; }
         .admin-header p { font-size: 0.85rem; color: #6b7280; margin-top: 2px; }
+        .status-pill { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9; padding: 8px 16px; border-radius: 40px; font-size: 0.8rem; font-weight: 700; color: #6b7280; border: 1.5px solid #e2e8f0; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #9ca3af; }
+        .status-pill.online { background: #dcfce7; color: #059669; border-color: #86efac; }
+        .status-pill.online .status-dot { background: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); animation: pulseDot 2s ease-in-out infinite; }
+        .status-pill.offline { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
+        .status-pill.offline .status-dot { background: #ef4444; }
+        @keyframes pulseDot { 0%, 100% { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); } 50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.1); } }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
+        .stat-card { background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 14px; }
+        .stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .stat-icon svg { width: 22px; height: 22px; fill: white; }
+        .stat-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .stat-icon.pink { background: linear-gradient(135deg, #ff3d8b, #ff6fa5); }
+        .stat-info { flex: 1; min-width: 0; }
+        .stat-label { font-size: 0.72rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 1.6rem; font-weight: 800; color: #1a1a2e; letter-spacing: -0.5px; line-height: 1.1; }
+        .stat-hint { font-size: 0.72rem; color: #9ca3af; margin-top: 2px; }
+
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } .status-pill { margin-left: 0; } }
         .admin-section { background: #fafbfc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 22px; }
         .admin-section h2 { font-size: 0.95rem; font-weight: 800; color: #1a1a2e; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
         .admin-section h2 svg { width: 18px; height: 18px; fill: #ff3d8b; }
@@ -32,7 +53,7 @@
         #qrPreview img, #qrPreview canvas { max-width: 100%; max-height: 100%; }
         .qr-preview-text { font-size: 0.75rem; color: #6b7280; text-align: center; }
         .btn-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
-        .btn { padding: 14px 28px; border: none; border-radius: 40px; font-size: 0.9rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s; letter-spacing: 0.3px; flex: 1; min-width: 160px; }
+        .btn { padding: 14px 28px; border: none; border-radius: 40px; font-size: 0.9rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s; letter-spacing: 0.3px; flex: 1; min-width: 160px; text-decoration: none; }
         .btn svg { width: 18px; height: 18px; fill: currentColor; }
         .btn-primary { background: linear-gradient(135deg, #ff3d8b, #ff6fa5); color: white; box-shadow: 0 6px 20px rgba(255, 61, 139, 0.4); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(255, 61, 139, 0.55); }
@@ -40,13 +61,16 @@
         .btn-secondary:hover { background: #e2e8f0; }
         .btn-danger { background: #fee2e2; color: #dc2626; border: 1.5px solid #fecaca; }
         .btn-danger:hover { background: #fecaca; }
+        .btn-live { background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+        .btn-live:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(16, 185, 129, 0.55); }
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1a1a2e; color: white; padding: 14px 28px; border-radius: 40px; font-size: 0.88rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); opacity: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; z-index: 2000; display: flex; align-items: center; gap: 8px; }
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
         .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .preview-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: #ff3d8b; font-weight: 700; text-decoration: none; margin-top: 12px; transition: gap 0.2s; }
-        .preview-link:hover { gap: 10px; }
-        .preview-link svg { width: 16px; height: 16px; fill: currentColor; }
+        .footer-info { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed #e2e8f0; font-size: 0.78rem; color: #6b7280; flex-wrap: wrap; }
+        .footer-info .last-save { display: flex; align-items: center; gap: 6px; }
+        .footer-info .last-save svg { width: 14px; height: 14px; fill: #10b981; }
+        .footer-info .last-save.warn svg { fill: #f59e0b; }
         .hint { font-size: 0.72rem; color: #9ca3af; margin-top: 4px; }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
         .modal-overlay.show { display: flex; }
@@ -69,6 +93,44 @@
                 <h1>Painel de Administração</h1>
                 <p>Edite o resumo do pedido, chave PIX e QR Code da tela de pagamento</p>
             </div>
+            <div class="status-pill" id="statusPill">
+                <span class="status-dot"></span>
+                <span id="statusText">Conectando...</span>
+            </div>
+        </div>
+
+        <!-- ESTATÍSTICAS AO VIVO -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Clientes na tela</div>
+                    <div class="stat-value" id="statClientes">0</div>
+                    <div class="stat-hint">abas do site abertas agora</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Total de cópias</div>
+                    <div class="stat-value" id="statCopias">0</div>
+                    <div class="stat-hint">cliques no botão Copiar</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pink">
+                    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Última cópia</div>
+                    <div class="stat-value" id="statUltimaCopia" style="font-size:1rem;">—</div>
+                    <div class="stat-hint" id="statUltimaCopiaHint">ninguém copiou ainda</div>
+                </div>
+            </div>
         </div>
 
         <div class="admin-grid">
@@ -87,11 +149,6 @@
                 <div class="form-row">
                     <div class="form-group"><label for="data">Data</label><input type="text" id="data" placeholder="Ex: Qua. 28 out."></div>
                     <div class="form-group"><label for="total">Total (R$)</label><input type="text" id="total" placeholder="Ex: 189,00"></div>
-                </div>
-                <div class="form-group">
-                    <label for="metade">Valor por pessoa (metade)</label>
-                    <input type="text" id="metade" placeholder="Ex: 94,50" readonly style="background:#f1f5f9; cursor:not-allowed;">
-                    <p class="hint">Calculado automaticamente como metade do total.</p>
                 </div>
             </div>
 
@@ -126,16 +183,23 @@
                 <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
                 Salvar Alterações
             </button>
+            <a href="index.html" target="_blank" class="btn btn-live" id="btnLive">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                Ver no site ao vivo
+            </a>
             <button class="btn btn-secondary" id="btnReset">
                 <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
                 Restaurar Padrão
             </button>
         </div>
 
-        <a href="index.html" class="preview-link" target="_blank">
-            <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
-            Abrir tela de pagamento do cliente
-        </a>
+        <div class="footer-info">
+            <div class="last-save" id="lastSaveInfo">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <span id="lastSaveText">Nenhum salvamento ainda</span>
+            </div>
+            <div>Projeto: <strong>tela-copiar-chave</strong></div>
+        </div>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -153,7 +217,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, remove }
+            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjlEzQVLQuXQwmqR6bP9Xj8nx0c122njw",
@@ -175,7 +240,6 @@
             cpf: '000.000.000-00',
             data: 'Qua. 28 out.',
             total: '189,00',
-            metade: '94,50',
             pixKey: '00020126580014br.gov.bcb.pix0136exemplo-chave-pix-123456',
             qrImage: null
         };
@@ -187,7 +251,6 @@
             cpf: document.getElementById('cpf'),
             data: document.getElementById('data'),
             total: document.getElementById('total'),
-            metade: document.getElementById('metade'),
             pixKey: document.getElementById('pixKey')
         };
         const qrPreview = document.getElementById('qrPreview');
@@ -195,13 +258,14 @@
         const btnRemoveImage = document.getElementById('btnRemoveImage');
         const toast = document.getElementById('toast');
         const resetModal = document.getElementById('resetModal');
+        const statusPill = document.getElementById('statusPill');
+        const statusText = document.getElementById('statusText');
+        const lastSaveInfo = document.getElementById('lastSaveInfo');
+        const lastSaveText = document.getElementById('lastSaveText');
 
         let currentQrImage = null;
-
-        function calcularMetade(totalStr) {
-            const valor = parseFloat(String(totalStr).replace(/\./g, '').replace(',', '.')) || 0;
-            return (valor / 2).toFixed(2).replace('.', ',');
-        }
+        let lastSaveTimestamp = null;
+        let firebaseConnected = false;
 
         function fillForm(config) {
             inputs.empresa.value = config.empresa;
@@ -210,7 +274,6 @@
             inputs.cpf.value = config.cpf || '';
             inputs.data.value = config.data;
             inputs.total.value = config.total;
-            inputs.metade.value = config.metade || calcularMetade(config.total);
             inputs.pixKey.value = config.pixKey;
             currentQrImage = config.qrImage || null;
             renderQrPreview();
@@ -234,12 +297,33 @@
             }
         }
 
+        function setStatus(online) {
+            firebaseConnected = online;
+            statusPill.classList.remove('online', 'offline');
+            if (online) {
+                statusPill.classList.add('online');
+                statusText.textContent = 'Ao vivo no Firebase';
+            } else {
+                statusPill.classList.add('offline');
+                statusText.textContent = 'Desconectado';
+            }
+        }
+
+        function updateLastSaveDisplay() {
+            if (!lastSaveTimestamp) return;
+            const diff = Math.floor((Date.now() - lastSaveTimestamp) / 1000);
+            let text;
+            if (diff < 5) text = 'Salvo agora mesmo';
+            else if (diff < 60) text = `Salvo há ${diff} segundos`;
+            else if (diff < 3600) text = `Salvo há ${Math.floor(diff / 60)} min`;
+            else text = `Salvo em ${new Date(lastSaveTimestamp).toLocaleString('pt-BR')}`;
+            lastSaveText.textContent = text;
+            lastSaveInfo.classList.remove('warn');
+            if (diff > 300) lastSaveInfo.classList.add('warn');
+        }
+
         inputs.pixKey.addEventListener('input', () => {
             if (!currentQrImage) renderQrPreview();
-        });
-
-        inputs.total.addEventListener('input', () => {
-            inputs.metade.value = calcularMetade(inputs.total.value);
         });
 
         qrImageInput.addEventListener('change', (e) => {
@@ -263,29 +347,39 @@
         });
 
         document.getElementById('btnSave').addEventListener('click', () => {
-            const total = inputs.total.value.trim() || DEFAULT_CONFIG.total;
+            if (!firebaseConnected) {
+                showToast('Sem conexão com o Firebase. Tente novamente.', 'error');
+                return;
+            }
             const config = {
                 empresa: inputs.empresa.value.trim() || DEFAULT_CONFIG.empresa,
                 origem: inputs.origem.value.trim() || DEFAULT_CONFIG.origem,
                 destino: inputs.destino.value.trim() || DEFAULT_CONFIG.destino,
                 cpf: inputs.cpf.value.trim() || DEFAULT_CONFIG.cpf,
                 data: inputs.data.value.trim() || DEFAULT_CONFIG.data,
-                total: total,
-                metade: calcularMetade(total),
+                total: inputs.total.value.trim() || DEFAULT_CONFIG.total,
                 pixKey: inputs.pixKey.value.trim() || DEFAULT_CONFIG.pixKey,
-                qrImage: currentQrImage
+                qrImage: currentQrImage,
+                updatedAt: Date.now()
             };
             set(ref(db, 'buser_pix_config'), config)
-                .then(() => showToast('Configurações salvas no Firebase!', 'success'))
+                .then(() => {
+                    lastSaveTimestamp = Date.now();
+                    updateLastSaveDisplay();
+                    showToast('✅ Salvo! O site já está atualizado.', 'success');
+                })
                 .catch((err) => showToast('Erro: ' + err.message, 'error'));
         });
 
         document.getElementById('btnReset').addEventListener('click', () => resetModal.classList.add('show'));
         document.getElementById('cancelReset').addEventListener('click', () => resetModal.classList.remove('show'));
         document.getElementById('confirmReset').addEventListener('click', () => {
-            set(ref(db, 'buser_pix_config'), DEFAULT_CONFIG)
+            const resetConfig = { ...DEFAULT_CONFIG, updatedAt: Date.now() };
+            set(ref(db, 'buser_pix_config'), resetConfig)
                 .then(() => {
                     fillForm(DEFAULT_CONFIG);
+                    lastSaveTimestamp = Date.now();
+                    updateLastSaveDisplay();
                     resetModal.classList.remove('show');
                     showToast('Restaurado ao padrão.', 'success');
                 })
@@ -301,14 +395,79 @@
             toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
         }
 
+        // ============ CONFIG EM TEMPO REAL ============
         onValue(ref(db, 'buser_pix_config'), (snapshot) => {
             const saved = snapshot.val();
             fillForm(saved ? { ...DEFAULT_CONFIG, ...saved } : { ...DEFAULT_CONFIG });
+            if (saved && saved.updatedAt) {
+                lastSaveTimestamp = saved.updatedAt;
+                updateLastSaveDisplay();
+            }
+            setStatus(true);
         }, (error) => {
             console.error('Erro ao ler do Firebase:', error);
+            setStatus(false);
             showToast('Erro ao carregar. Verifique as regras do banco.', 'error');
             fillForm(DEFAULT_CONFIG);
         });
+
+        // ============ CLIENTES AO VIVO (PRESENÇA) ============
+        const statClientes = document.getElementById('statClientes');
+        onValue(ref(db, 'presenca'), (snapshot) => {
+            const dados = snapshot.val() || {};
+            const agora = Date.now();
+            // Considera "ao vivo" quem entrou nos últimos 10 minutos
+            const ativos = Object.entries(dados).filter(([id, info]) => {
+                const ts = info && info.entrouEm ? info.entrouEm : 0;
+                return (agora - ts) < 10 * 60 * 1000;
+            });
+            statClientes.textContent = ativos.length;
+        });
+
+        // ============ CÓPIAS (EVENTOS) ============
+        const statCopias = document.getElementById('statCopias');
+        const statUltimaCopia = document.getElementById('statUltimaCopia');
+        const statUltimaCopiaHint = document.getElementById('statUltimaCopiaHint');
+        let ultimaCopiaTs = null;
+
+        onValue(ref(db, 'eventos_copia'), (snapshot) => {
+            const dados = snapshot.val() || {};
+            const lista = Object.values(dados);
+            statCopias.textContent = lista.length;
+
+            if (lista.length > 0) {
+                const maisRecente = lista.reduce((a, b) => (a.copiadoEm > b.copiadoEm ? a : b));
+                ultimaCopiaTs = maisRecente.copiadoEm;
+                atualizarUltimaCopia();
+            } else {
+                statUltimaCopia.textContent = '—';
+                statUltimaCopiaHint.textContent = 'ninguém copiou ainda';
+            }
+        });
+
+        function atualizarUltimaCopia() {
+            if (!ultimaCopiaTs) return;
+            const diff = Math.floor((Date.now() - ultimaCopiaTs) / 1000);
+            let texto, hint;
+            if (diff < 5) { texto = 'agora mesmo'; hint = 'alguém acabou de copiar'; }
+            else if (diff < 60) { texto = `${diff}s atrás`; hint = 'clique recente'; }
+            else if (diff < 3600) { texto = `${Math.floor(diff / 60)} min atrás`; hint = 'última cópia'; }
+            else { texto = new Date(ultimaCopiaTs).toLocaleTimeString('pt-BR'); hint = 'última cópia'; }
+            statUltimaCopia.textContent = texto;
+            statUltimaCopiaHint.textContent = hint;
+        }
+        setInterval(atualizarUltimaCopia, 1000);
+
+        // ============ CONEXÃO ============
+        window.addEventListener('online', () => setStatus(true));
+        window.addEventListener('offline', () => setStatus(false));
+
+        const connectedRef = ref(db, '.info/connected');
+        onValue(connectedRef, (snap) => {
+            setStatus(snap.val() === true);
+        });
+
+        setInterval(updateLastSaveDisplay, 1000);
     </script>
 </body>
 </html>
