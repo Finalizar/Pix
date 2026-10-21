@@ -42,13 +42,9 @@
         .order-date::before { content: '📅'; font-size: 0.85rem; }
         .order-cpf { font-size: 0.82rem; color: #6b7280; font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
         .order-cpf::before { content: '🪪'; font-size: 0.85rem; }
-        .order-total { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
-        .order-total-row { display: flex; align-items: center; justify-content: space-between; }
+        .order-total { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
         .order-total-label { font-size: 0.85rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
         .order-total-value { font-size: 1.4rem; font-weight: 800; color: #ff3d8b; letter-spacing: -0.5px; }
-        .order-metade-row { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
-        .order-metade-label { font-size: 0.8rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
-        .order-metade-value { font-size: 1.15rem; font-weight: 800; color: #10b981; letter-spacing: -0.3px; }
         .qrcode-wrapper { display: flex; justify-content: center; margin-bottom: 20px; }
         #qrcode { width: 190px; height: 190px; background: #ffffff; padding: 12px; border-radius: 20px; box-shadow: 0 8px 24px rgba(255, 61, 139, 0.15); border: 2px solid #ffe0ec; display: flex; align-items: center; justify-content: center; }
         #qrcode img { width: 100%; height: 100%; object-fit: contain; }
@@ -81,7 +77,6 @@
             .cookie-banner { flex-direction: column; text-align: center; padding: 18px 16px; }
             .btn-cookie { width: 100%; }
             .order-total-value { font-size: 1.25rem; }
-            .order-metade-value { font-size: 1.05rem; }
         }
     </style>
 </head>
@@ -141,14 +136,8 @@
             <div class="order-date" id="orderDate">—</div>
             <div class="order-cpf" id="orderCpf">CPF: —</div>
             <div class="order-total">
-                <div class="order-total-row">
-                    <span class="order-total-label">Total</span>
-                    <span class="order-total-value" id="orderTotal">R$ —</span>
-                </div>
-                <div class="order-metade-row">
-                    <span class="order-metade-label">Por pessoa (metade)</span>
-                    <span class="order-metade-value" id="orderMetade">R$ —</span>
-                </div>
+                <span class="order-total-label">Total</span>
+                <span class="order-total-value" id="orderTotal">R$ —</span>
             </div>
         </div>
 
@@ -203,7 +192,6 @@
             cpf: '000.000.000-00',
             data: 'Qua. 28 out.',
             total: '189,00',
-            metade: '94,50',
             pixKey: '00020126580014br.gov.bcb.pix0136exemplo-chave-pix-123456',
             qrImage: null
         };
@@ -213,11 +201,6 @@
         const copyFeedback = document.getElementById('copyFeedback');
         let currentPixKey = DEFAULT_CONFIG.pixKey;
 
-        function calcularMetade(totalStr) {
-            const valor = parseFloat(String(totalStr).replace(/\./g, '').replace(',', '.')) || 0;
-            return (valor / 2).toFixed(2).replace('.', ',');
-        }
-
         function aplicarConfig(config) {
             document.getElementById('orderCompany').textContent = config.empresa;
             document.getElementById('orderOrigem').textContent = config.origem;
@@ -225,7 +208,6 @@
             document.getElementById('orderDate').textContent = config.data;
             document.getElementById('orderCpf').textContent = 'CPF: ' + (config.cpf || '—');
             document.getElementById('orderTotal').textContent = 'R$ ' + config.total;
-            document.getElementById('orderMetade').textContent = 'R$ ' + (config.metade || calcularMetade(config.total));
             document.getElementById('pixKeyText').textContent = config.pixKey;
             currentPixKey = config.pixKey;
 
