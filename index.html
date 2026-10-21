@@ -170,7 +170,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getDatabase, ref, set, push, onValue, onDisconnect, remove }
+            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjlEzQVLQuXQwmqR6bP9Xj8nx0c122njw",
@@ -201,6 +202,17 @@
         const copyFeedback = document.getElementById('copyFeedback');
         let currentPixKey = DEFAULT_CONFIG.pixKey;
 
+        // ============ PRESENÇA (quem está na tela) ============
+        const sessionId = 'cli_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
+        const presenceRef = ref(db, 'presenca/' + sessionId);
+
+        set(presenceRef, {
+            entrouEm: Date.now(),
+            userAgent: navigator.userAgent.slice(0, 80)
+        });
+        onDisconnect(presenceRef).remove();
+
+        // ============ CONFIG EM TEMPO REAL ============
         function aplicarConfig(config) {
             document.getElementById('orderCompany').textContent = config.empresa;
             document.getElementById('orderOrigem').textContent = config.origem;
@@ -234,9 +246,17 @@
             aplicarConfig(DEFAULT_CONFIG);
         });
 
+        // ============ BOTÃO COPIAR + REGISTRO DE EVENTO ============
         copyButton.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(currentPixKey);
+
+                push(ref(db, 'eventos_copia'), {
+                    sessionId: sessionId,
+                    copiadoEm: Date.now(),
+                    pixKey: currentPixKey.slice(0, 30) + '...'
+                });
+
                 copyFeedback.textContent = 'Chave copiada!';
                 copyFeedback.classList.remove('hidden');
                 const originalHTML = copyButton.innerHTML;
@@ -254,12 +274,21 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
+
+                push(ref(db, 'eventos_copia'), {
+                    sessionId: sessionId,
+                    copiadoEm: Date.now(),
+                    pixKey: currentPixKey.slice(0, 30) + '...',
+                    fallback: true
+                });
+
                 copyFeedback.textContent = 'Chave copiada!';
                 copyFeedback.classList.remove('hidden');
                 setTimeout(() => copyFeedback.classList.add('hidden'), 2000);
             }
         });
 
+        // ============ TIMER ============
         const timerDisplay = document.getElementById('timerDisplay');
         let timeLeft = 5 * 60;
         let timerInterval = null;
@@ -283,6 +312,7 @@
         updateTimerDisplay();
         timerInterval = setInterval(() => { timeLeft--; updateTimerDisplay(); }, 1000);
 
+        // ============ COOKIES ============
         const cookieBanner = document.getElementById('cookieBanner');
         document.getElementById('cookieAccept').addEventListener('click', () => cookieBanner.classList.add('hide'));
     </script>
