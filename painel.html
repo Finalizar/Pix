@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Buser PIX</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
+        body { min-height: 100vh; background: linear-gradient(135deg, #fff5f7 0%, #f0f9ff 100%); padding: 30px 20px; display: flex; flex-direction: column; align-items: center; }
+        .admin-container { background: #ffffff; border-radius: 28px; box-shadow: 0 20px 50px rgba(255, 0, 128, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04); max-width: 900px; width: 100%; padding: 32px 28px; position: relative; overflow: hidden; }
+        .admin-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #ff3d8b, #ff6fa5, #ff3d8b); }
+        .admin-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px dashed #ffe0ec; }
+        .admin-header-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #ff3d8b, #ff6fa5); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 6px 16px rgba(255, 61, 139, 0.3); }
+        .admin-header-icon svg { width: 26px; height: 26px; fill: white; }
+        .admin-header h1 { font-size: 1.5rem; font-weight: 800; color: #1a1a2e; letter-spacing: -0.5px; }
+        .admin-header p { font-size: 0.85rem; color: #6b7280; margin-top: 2px; }
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+        .admin-section { background: #fafbfc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 22px; }
+        .admin-section h2 { font-size: 0.95rem; font-weight: 800; color: #1a1a2e; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+        .admin-section h2 svg { width: 18px; height: 18px; fill: #ff3d8b; }
+        .form-group { margin-bottom: 16px; }
+        .form-group:last-child { margin-bottom: 0; }
+        .form-group label { display: block; font-size: 0.78rem; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+        .form-group input { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 0.9rem; color: #1a1a2e; background: #ffffff; transition: border-color 0.2s, box-shadow 0.2s; font-family: inherit; }
+        .form-group input:focus { outline: none; border-color: #ff3d8b; box-shadow: 0 0 0 3px rgba(255, 61, 139, 0.12); }
+        .form-group input::placeholder { color: #9ca3af; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .qr-preview { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 18px; background: #ffffff; border: 1.5px dashed #ffd0e0; border-radius: 16px; margin-bottom: 16px; }
+        #qrPreview { width: 160px; height: 160px; padding: 8px; background: #ffffff; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        #qrPreview img, #qrPreview canvas { max-width: 100%; max-height: 100%; }
+        .qr-preview-text { font-size: 0.75rem; color: #6b7280; text-align: center; }
+        .btn-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+        .btn { padding: 14px 28px; border: none; border-radius: 40px; font-size: 0.9rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s; letter-spacing: 0.3px; flex: 1; min-width: 160px; }
+        .btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .btn-primary { background: linear-gradient(135deg, #ff3d8b, #ff6fa5); color: white; box-shadow: 0 6px 20px rgba(255, 61, 139, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(255, 61, 139, 0.55); }
+        .btn-secondary { background: #f1f5f9; color: #1a1a2e; border: 1.5px solid #e2e8f0; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .btn-danger { background: #fee2e2; color: #dc2626; border: 1.5px solid #fecaca; }
+        .btn-danger:hover { background: #fecaca; }
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1a1a2e; color: white; padding: 14px 28px; border-radius: 40px; font-size: 0.88rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); opacity: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; z-index: 2000; display: flex; align-items: center; gap: 8px; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
+        .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .preview-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: #ff3d8b; font-weight: 700; text-decoration: none; margin-top: 12px; transition: gap 0.2s; }
+        .preview-link:hover { gap: 10px; }
+        .preview-link svg { width: 16px; height: 16px; fill: currentColor; }
+        .hint { font-size: 0.72rem; color: #9ca3af; margin-top: 4px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: white; border-radius: 20px; padding: 28px; max-width: 400px; width: 100%; text-align: center; }
+        .modal h3 { font-size: 1.1rem; color: #1a1a2e; margin-bottom: 10px; }
+        .modal p { font-size: 0.88rem; color: #6b7280; margin-bottom: 22px; line-height: 1.5; }
+        .modal-actions { display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <div class="admin-header-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+            </div>
+            <div>
+                <h1>Painel de Administração</h1>
+                <p>Edite o resumo do pedido, chave PIX e QR Code da tela de pagamento</p>
+            </div>
+        </div>
+
+        <div class="admin-grid">
+            <div class="admin-section">
+                <h2>
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    Resumo do Pedido
+                </h2>
+                <div class="form-group"><label for="empresa">Empresa</label><input type="text" id="empresa" placeholder="Ex: Gontijo"></div>
+                <div class="form-group"><label for="origem">Origem</label><input type="text" id="origem" placeholder="Ex: Londrina - Rodoviária"></div>
+                <div class="form-group"><label for="destino">Destino</label><input type="text" id="destino" placeholder="Ex: Belo Horizonte - Rodoviária"></div>
+                <div class="form-group">
+                    <label for="cpf">CPF do passageiro</label>
+                    <input type="text" id="cpf" placeholder="Ex: 000.000.000-00">
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="data">Data</label><input type="text" id="data" placeholder="Ex: Qua. 28 out."></div>
+                    <div class="form-group"><label for="total">Total (R$)</label><input type="text" id="total" placeholder="Ex: 189,00"></div>
+                </div>
+                <div class="form-group">
+                    <label for="metade">Valor por pessoa (metade)</label>
+                    <input type="text" id="metade" placeholder="Ex: 94,50" readonly style="background:#f1f5f9; cursor:not-allowed;">
+                    <p class="hint">Calculado automaticamente como metade do total.</p>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2>
+                    <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM3 21h8v-8H3v8zm2-6h4v4H5v-4zM13 3v8h8V3h-8zm6 6h-4V5h4v4zM19 19h2v2h-2zM13 13h2v2h-2zM15 15h2v2h-2zM13 17h2v2h-2zM15 19h2v2h-2zM17 17h2v2h-2z"/></svg>
+                    Chave PIX e QR Code
+                </h2>
+                <div class="form-group">
+                    <label for="pixKey">Chave PIX (copia e cola)</label>
+                    <input type="text" id="pixKey" placeholder="Cole aqui a chave PIX">
+                    <p class="hint">O QR Code será regenerado automaticamente ao alterar a chave.</p>
+                </div>
+                <div class="qr-preview">
+                    <div id="qrPreview"></div>
+                    <p class="qr-preview-text">Pré-visualização do QR Code</p>
+                </div>
+                <div class="form-group">
+                    <label for="qrImage">OU envie uma imagem de QR Code personalizada</label>
+                    <input type="file" id="qrImage" accept="image/*">
+                    <p class="hint">Se enviar imagem, ela substitui o QR gerado automaticamente.</p>
+                </div>
+                <button class="btn btn-danger" id="btnRemoveImage" style="min-width: auto; padding: 10px 18px; font-size: 0.8rem; display: none;">
+                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    Remover imagem personalizada
+                </button>
+            </div>
+        </div>
+
+        <div class="btn-actions">
+            <button class="btn btn-primary" id="btnSave">
+                <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                Salvar Alterações
+            </button>
+            <button class="btn btn-secondary" id="btnReset">
+                <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                Restaurar Padrão
+            </button>
+        </div>
+
+        <a href="index.html" class="preview-link" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            Abrir tela de pagamento do cliente
+        </a>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal">
+            <h3>Restaurar padrão?</h3>
+            <p>Isso vai apagar todas as alterações salvas e voltar aos valores originais.</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelReset" style="min-width: auto;">Cancelar</button>
+                <button class="btn btn-danger" id="confirmReset" style="min-width: auto;">Restaurar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjlEzQVLQuXQwmqR6bP9Xj8nx0c122njw",
+            authDomain: "tela-copiar-chave.firebaseapp.com",
+            databaseURL: "https://tela-copiar-chave-default-rtdb.firebaseio.com",
+            projectId: "tela-copiar-chave",
+            storageBucket: "tela-copiar-chave.firebasestorage.app",
+            messagingSenderId: "1002556410924",
+            appId: "1:1002556410924:web:39c833bb3abf14c5259589"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const DEFAULT_CONFIG = {
+            empresa: 'Gontijo',
+            origem: 'Londrina - Rodoviária',
+            destino: 'Belo Horizonte - Rodoviária',
+            cpf: '000.000.000-00',
+            data: 'Qua. 28 out.',
+            total: '189,00',
+            metade: '94,50',
+            pixKey: '00020126580014br.gov.bcb.pix0136exemplo-chave-pix-123456',
+            qrImage: null
+        };
+
+        const inputs = {
+            empresa: document.getElementById('empresa'),
+            origem: document.getElementById('origem'),
+            destino: document.getElementById('destino'),
+            cpf: document.getElementById('cpf'),
+            data: document.getElementById('data'),
+            total: document.getElementById('total'),
+            metade: document.getElementById('metade'),
+            pixKey: document.getElementById('pixKey')
+        };
+        const qrPreview = document.getElementById('qrPreview');
+        const qrImageInput = document.getElementById('qrImage');
+        const btnRemoveImage = document.getElementById('btnRemoveImage');
+        const toast = document.getElementById('toast');
+        const resetModal = document.getElementById('resetModal');
+
+        let currentQrImage = null;
+
+        function calcularMetade(totalStr) {
+            const valor = parseFloat(String(totalStr).replace(/\./g, '').replace(',', '.')) || 0;
+            return (valor / 2).toFixed(2).replace('.', ',');
+        }
+
+        function fillForm(config) {
+            inputs.empresa.value = config.empresa;
+            inputs.origem.value = config.origem;
+            inputs.destino.value = config.destino;
+            inputs.cpf.value = config.cpf || '';
+            inputs.data.value = config.data;
+            inputs.total.value = config.total;
+            inputs.metade.value = config.metade || calcularMetade(config.total);
+            inputs.pixKey.value = config.pixKey;
+            currentQrImage = config.qrImage || null;
+            renderQrPreview();
+        }
+
+        function renderQrPreview() {
+            qrPreview.innerHTML = '';
+            if (currentQrImage) {
+                const img = document.createElement('img');
+                img.src = currentQrImage;
+                qrPreview.appendChild(img);
+                btnRemoveImage.style.display = 'inline-flex';
+            } else {
+                const key = inputs.pixKey.value.trim() || 'chave-vazia';
+                new QRCode(qrPreview, {
+                    text: key, width: 160, height: 160,
+                    colorDark: '#1a1a2e', colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                btnRemoveImage.style.display = 'none';
+            }
+        }
+
+        inputs.pixKey.addEventListener('input', () => {
+            if (!currentQrImage) renderQrPreview();
+        });
+
+        inputs.total.addEventListener('input', () => {
+            inputs.metade.value = calcularMetade(inputs.total.value);
+        });
+
+        qrImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) { showToast('Selecione uma imagem válida.', 'error'); return; }
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                currentQrImage = event.target.result;
+                renderQrPreview();
+                showToast('Imagem carregada! Clique em Salvar.', 'success');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        btnRemoveImage.addEventListener('click', () => {
+            currentQrImage = null;
+            qrImageInput.value = '';
+            renderQrPreview();
+            showToast('Imagem removida.', 'success');
+        });
+
+        document.getElementById('btnSave').addEventListener('click', () => {
+            const total = inputs.total.value.trim() || DEFAULT_CONFIG.total;
+            const config = {
+                empresa: inputs.empresa.value.trim() || DEFAULT_CONFIG.empresa,
+                origem: inputs.origem.value.trim() || DEFAULT_CONFIG.origem,
+                destino: inputs.destino.value.trim() || DEFAULT_CONFIG.destino,
+                cpf: inputs.cpf.value.trim() || DEFAULT_CONFIG.cpf,
+                data: inputs.data.value.trim() || DEFAULT_CONFIG.data,
+                total: total,
+                metade: calcularMetade(total),
+                pixKey: inputs.pixKey.value.trim() || DEFAULT_CONFIG.pixKey,
+                qrImage: currentQrImage
+            };
+            set(ref(db, 'buser_pix_config'), config)
+                .then(() => showToast('Configurações salvas no Firebase!', 'success'))
+                .catch((err) => showToast('Erro: ' + err.message, 'error'));
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => resetModal.classList.add('show'));
+        document.getElementById('cancelReset').addEventListener('click', () => resetModal.classList.remove('show'));
+        document.getElementById('confirmReset').addEventListener('click', () => {
+            set(ref(db, 'buser_pix_config'), DEFAULT_CONFIG)
+                .then(() => {
+                    fillForm(DEFAULT_CONFIG);
+                    resetModal.classList.remove('show');
+                    showToast('Restaurado ao padrão.', 'success');
+                })
+                .catch((err) => showToast('Erro: ' + err.message, 'error'));
+        });
+        resetModal.addEventListener('click', (e) => { if (e.target === resetModal) resetModal.classList.remove('show'); });
+
+        let toastTimeout = null;
+        function showToast(message, type = 'success') {
+            clearTimeout(toastTimeout);
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+        }
+
+        onValue(ref(db, 'buser_pix_config'), (snapshot) => {
+            const saved = snapshot.val();
+            fillForm(saved ? { ...DEFAULT_CONFIG, ...saved } : { ...DEFAULT_CONFIG });
+        }, (error) => {
+            console.error('Erro ao ler do Firebase:', error);
+            showToast('Erro ao carregar. Verifique as regras do banco.', 'error');
+            fillForm(DEFAULT_CONFIG);
+        });
+    </script>
+</body>
+</html>
